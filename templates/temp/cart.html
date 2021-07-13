@@ -1,0 +1,72 @@
+{% extends 'temp/base.html' %}
+{% load cart %}
+{% load socialaccount %}
+{% block body %}
+
+<div class="small-container cart-page">
+        <table>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+            </tr>
+            {% for prod in product %}
+            <tr>
+                <td>
+                    <div class="cart-info">
+                        <img src="{{prod.image.url}}">
+                        <div>
+                            <p>{{prod.name}}</p>
+                            <small>Price: Rs{{prod.price}}/-</small>
+                            <br>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                <div class="col" style="width: 300px;"> 
+                <form action="/cartitem/#{{prod.id}}" class="col-2" method="POST" >{% csrf_token %}
+                  <input type="text" name="product" value="{{prod.id}}" hidden>
+                  <input type="text" name="remove" value="True" hidden>
+                  <input type="submit" value="-">
+                </form>
+                <div class="text-center col">{{prod|quant:request.session.cart}}</div>
+                <form action="/cartitem/#{{prod.id}}" class="col-2" method="POST">{% csrf_token %}
+                  <input type="text" name="product" value="{{prod.id}}" hidden>
+                  <input type="submit" value="+">
+                </form>
+              </div></td>
+                <td>Rs.{{prod|product_total_price:request.session.cart}}/-</td>
+            </tr>
+            
+            {% endfor %}
+            
+        </table>
+        <div class="total-price">
+            <table>
+            {% if request.session.cart|cart %}
+                <tr>
+                    <td>Cart's total</td>
+                    <td>Rs.{{product|cart_total:request.session.cart}}/-</td>
+                </tr>
+            {% endif %}
+            </table>
+        </div>
+    
+    {% if user.is_authenticated %}
+    {% if request.session.cart|cart %}
+    <center><a href="{% url 'place' %}" type="button" class="btn btn-outline-info btn-lg mb-2" style="border: none;">Book Order</a></center>
+    {% else %}
+    <h1>Your cart is empty</h1>
+    {% endif %}
+    {% else %}
+    {% if request.session.cart|cart %}
+    <a href="{% provider_login_url 'google' %}" type="button" class="btn btn-info btn-lg mb-2">Please Login to place
+      order.</a>
+    {% else %}
+    <h1>Your cart is empty</h1>
+    {% endif %}
+
+    {% endif %}
+</div>
+
+{% endblock body %}

@@ -1,0 +1,28 @@
+{% extends 'temp/base.html' %}
+{% load cart %}
+{% block body %}
+
+<div class="small-container">
+        <div class="row row-2">
+           <center><h1><b>Your Products</b></h1></center>
+        </div>
+        <div class="row">
+            {% for product in orders %}
+            <div class="col-4">
+                <a href="{% url 'view' product.id %}"><img src="{{product.image.url}}"></a>
+                <h2 style="color:green;">{{product.product.name}} 
+                <h6>{% if product.status|status %}
+                </strong>  <span class="badge bg-info">{{product.status}}</span>
+                {% else %}
+                </strong>  <span class="badge bg-danger">{{product.status}}</span>
+                {% endif %}</h6>
+                </h2>
+                <h2 style="margin-top: 5px; margin-bottom: 5px; color: #000;">{{product.product.discription | truncatechars:50}}</h2>
+                <p>Rs.{{product.price}}/-</p>
+            </div>
+            {% endfor %}
+            
+        </div>
+    </div>
+
+{% endblock body %}

@@ -1,0 +1,33 @@
+{% extends 'temp/base.html' %}
+{% block body %}
+<div class="small-container">
+        <div class="row">
+            {% for product in products %}
+            <div class="col-4">
+                <a href="{% url 'view' product.id %}"><img src="{{product.image.url}}"></a>
+                <h2>{{product.name}}</h2>
+                <h2 style="margin-top: 5px; margin-bottom: 5px; color: #000;">{{product.discription | truncatechars:50}}</h2>
+                <p>Rs.{{product.price}}/-</p>
+            </div>
+            {% endfor %}
+            
+        </div>
+    </div>
+
+
+{% endblock body %}
+
+{% block script %}
+ <script>
+        var MenuItems = document.getElementById("MenuItems");
+        MenuItems.style.maxHeight = "0px";
+        function menutoggle() {
+            if (MenuItems.style.maxHeight == "0px") {
+                MenuItems.style.maxHeight = "200px"
+            }
+            else {
+                MenuItems.style.maxHeight = "0px"
+            }
+        }
+    </script>
+{% endblock script %}

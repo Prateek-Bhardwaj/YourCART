@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load socialaccount %}
+{% providers_media_js %}
+{% block body %}
+
+
+    <div class="container text-dark mt-5">
+        <div class="row justify-content-md-center">
+          <div class="col-md-5 bg-grey p-3">
+            <form class="form-signin">
+                <h1 class="h3 mb-3">Please sign in</h1>
+                <a href="{% provider_login_url 'google' %}" class="btn btn btn-danger btn-lg btn-block" role="button" aria-pressed="true">Sign in with Google</a>
+                <a href="{% provider_login_url 'facebook' %}" method="oauth2" class="btn btn btn-danger btn-lg btn-block" method="js.sdk" role="button" aria-pressed="true">Sign in with facebook</a>
+                {% comment %} <a href="{% url "social:begin" "facebook" %}">Login with facebook</a> {% endcomment %}
+                <p class="mt-5 mb-3 text-muted">&copy; 2017-2020</p>
+              </form>
+          </div>
+        </div>
+      </div>
+
+{% endblock body %}
+

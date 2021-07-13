@@ -1,0 +1,87 @@
+{% extends 'temp/base.html' %}
+{% load cart %}
+
+{% block body %}
+
+<div class="small-container single-product">
+    <div class="row">
+        <div class="col-2">
+
+            {% for product in products %}
+            <img src="{{product.image.url}}" class="img-fluid" width="500px" id="ProductImg">
+            {% endfor %}
+
+            <div class="small-img-row">
+                {% for order in orders %}
+                <div class="small-img-col">
+                    <img src="{{order.picture.url}}" width="100%" class="small-img">
+                </div>
+                {% endfor %}
+            </div>
+
+
+        </div>
+        {% for product in products %}
+        <div class="col-2">
+            <h1>{{product.name}}</h1>
+            <h4>Rs.{{product.price}}/-</h4>
+            <form action="/cart/#{{product.id}}" method="POST"> {% csrf_token %}
+                <input type="text" name="product" value="{{product.id}}" hidden>
+                <input type="submit" class="btn" value="Add to Cart" style="padding-left: 40px;padding-right: 40px;">
+
+            </form>
+            <h3>Product Details <i class="fa fa-indent"></i></h3>
+            <br>
+            <p>{{product.discription}}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+<!-- Review -->
+<div class="container" style="margin-top: 4em;margin-bottom: 4em;">
+    {% if user.is_authenticated %}
+    <div class="title" style="background-color: rgb(42, 159, 163); padding: 0.5rem;">
+        <h2 style="color: white;">Hello, {{request.user}} Please give us your valuable review.</h2>
+    </div>
+    <div class="review">
+        <form action="/review/" method="POST"> {% csrf_token %}
+            <div class="mt-3">
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="content" Required></textarea>
+            </div><br>
+            {% for product in products %}
+            <input type="text" value="{{product.id}}" name="product" hidden><br>
+            <button type="submit" class="btn btn-primary btn-lg" style="border-radius: 5px;">Send</button>
+            <!-- <input class="btn btn-outline-info" type="submit" value="Send"> -->
+            {% endfor %}
+        </form>
+    </div>
+    {% else %}
+    <h2 style="color: white; background-color: rgb(42, 159, 163); padding: 0.5rem;">Please login to write a review.</h2>
+    {% endif %}
+</div>
+<div class="container">
+    {% for re in rev %}
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <strong> {{re.customer}}!</strong> {{re.content}} , ({{re.date}})
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock body %}
+
+{% block script %}
+
+<script>
+    var ProductImg = document.getElementById("ProductImg");
+    var SmallImg = document.getElementsByClassName("small-img");
+    {% for order in orders %}
+    SmallImg[{{forloop.counter0}}].onclick = function () {
+        ProductImg.src = SmallImg[{{forloop.counter0}}].src;
+    }
+    {% endfor %}
+
+</script>
+
+{% endblock script %}
